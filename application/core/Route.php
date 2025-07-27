@@ -3,7 +3,12 @@ class Route
 {
     public static function start()
     {
-        $uri = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
+        $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        $scriptDir = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/');
+        if ($scriptDir !== '' && strpos($uri, $scriptDir) === 0) {
+            $uri = substr($uri, strlen($scriptDir));
+        }
+        $uri = trim($uri, '/');
         if ($uri === '') {
             $uri = 'about'; // default page
         }
