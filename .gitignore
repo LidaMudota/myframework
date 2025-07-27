@@ -1,0 +1,33 @@
+# Composer зависимости
+/vendor/
+
+# Кэш Twig (если ты его включишь)
+cache/
+*.cache
+
+# Логи и временные файлы
+*.log
+*.tmp
+
+# Конфигурации среды
+.env
+
+# IDE и редакторы
+.vscode/
+.idea/
+
+# Системные файлы Windows/macOS
+.DS_Store
+Thumbs.db
+
+# PHP кэш
+*.swp
+*.swo
+
+# PHP autoload кэш
+composer.lock
+
+# PyCharm, JetBrains, PhpStorm и др.
+*.iml
+*.ipr
+*.iws
