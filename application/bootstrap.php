@@ -21,5 +21,9 @@ spl_autoload_register(function ($class) {
     }
 });
 
+// Register error handler
+$handler = new ErrorHandler(__DIR__ . '/../logs');
+$handler->register();
+
 // Start routing
 Route::start();

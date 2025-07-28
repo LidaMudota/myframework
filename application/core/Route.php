@@ -19,10 +19,17 @@ class Route
         if (class_exists($controllerName)) {
             $controller = new $controllerName();
             $controller->action($uri);
-        } else {
-            // No specific controller, just render view
+            return;
+        }
+
+        $viewPath = __DIR__ . '/../views/' . $uri . '.twig';
+        if (file_exists($viewPath)) {
             $view = new View();
             $view->render($uri);
+            return;
         }
+        
+        $controller = new NotFoundController();
+        $controller->action('404');
     }
 }

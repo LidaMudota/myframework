@@ -1,10 +1,16 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>{{ title|default('') }}</title>
+    <title>{{ title|default('Страница') }}</title>
 </head>
 <body>
-{{ content|raw }}
+    <nav>
+        <a href="/myframework/about">О нас</a> |
+        <a href="/myframework/contacts">Контакты</a> |
+        <a href="/myframework/services">Услуги</a>
+    </nav>
+    <hr>
+    {{ content|raw }}
 </body>
 </html>

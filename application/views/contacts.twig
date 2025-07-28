@@ -1,2 +1,19 @@
 <h1>Контакты</h1>
-<p>Свяжитесь с нами по адресу example@example.com</p>
+{% if success %}
+    <p class="success">{{ success }}</p>
+{% endif %}
+{% if errors %}
+    <ul class="error">
+    {% for e in errors %}
+        <li>{{ e }}</li>
+    {% endfor %}
+    </ul>
+{% endif %}
+<form method="post">
+    <label>Имя: <input type="text" name="name" value="{{ name|e }}"></label><br>
+    <label>Email: <input type="email" name="email" value="{{ email|e }}"></label><br>
+    <label>Сообщение:<br>
+        <textarea name="message">{{ message|e }}</textarea>
+    </label><br>
+    <button type="submit">Отправить</button>
+</form>
