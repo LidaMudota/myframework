@@ -1,19 +1,17 @@
-<h1>Контакты</h1>
-{% if success %}
-    <p class="success">{{ success }}</p>
-{% endif %}
+<h1>{{ title }}</h1>
+
 {% if errors %}
-    <ul class="error">
-    {% for e in errors %}
-        <li>{{ e }}</li>
-    {% endfor %}
+    <ul style="color: red;">
+        {% for error in errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
     </ul>
 {% endif %}
+
 <form method="post">
-    <label>Имя: <input type="text" name="name" value="{{ name|e }}"></label><br>
-    <label>Email: <input type="email" name="email" value="{{ email|e }}"></label><br>
-    <label>Сообщение:<br>
-        <textarea name="message">{{ message|e }}</textarea>
-    </label><br>
-    <button type="submit">Отправить</button>
+    Имя: <input name="name" value="{{ form.name|e }}"><br>
+    Email: <input name="email" value="{{ form.email|e }}"><br>
+    Сообщение:<br>
+    <textarea name="message">{{ form.message|e }}</textarea><br>
+    <button>Отправить</button>
 </form>

@@ -1,46 +1,37 @@
 <?php
+
 class ContactsController extends Controller
 {
-    public function action(string $viewName): void
+    public function action_index()
     {
-        $data = [];
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $data = $this->handleForm();
-        }
-        $this->view->render('contacts', $data);
-    }
-
-    private function handleForm(): array
-    {
-        $name = trim($_POST['name'] ?? '');
-        $email = trim($_POST['email'] ?? '');
-        $message = trim($_POST['message'] ?? '');
-
         $errors = [];
-        if ($name === '') {
-            $errors[] = 'Введите имя';
-        }
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $errors[] = 'Неверный email';
-        }
-        if ($message === '') {
-            $errors[] = 'Введите сообщение';
+        $success = false;
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $name = trim($_POST['name'] ?? '');
+            $email = trim($_POST['email'] ?? '');
+            $message = trim($_POST['message'] ?? '');
+
+            if ($name === '') $errors[] = 'Имя обязательно';
+            if ($email === '') $errors[] = 'Email обязателен';
+            if ($message === '') $errors[] = 'Сообщение обязательно';
+
+            if (empty($errors)) {
+                $data = [
+                    'name' => $name,
+                    'email' => $email,
+                    'message' => $message,
+                    'timestamp' => date('c')
+                ];
+                if (!file_exists('data')) mkdir('data');
+                file_put_contents('data/contacts.json', json_encode($data, JSON_PRETTY_PRINT), FILE_APPEND);
+                $success = true;
+            }
         }
 
-        if (!$errors) {
-            $file = __DIR__ . '/../data/contacts.json';
-            if (!is_dir(dirname($file))) {
-                mkdir(dirname($file), 0777, true);
-            }
-            $records = [];
-            if (file_exists($file)) {
-                $records = json_decode(file_get_contents($file), true) ?: [];
-            }
-            $records[] = ['name' => $name, 'email' => $email, 'message' => $message, 'date' => date('Y-m-d H:i:s')];
-            file_put_contents($file, json_encode($records, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
-            return ['success' => 'Сообщение отправлено'];
-        }
-
-        return ['errors' => $errors, 'name' => $name, 'email' => $email, 'message' => $message];
+        $this->view->render('contacts', [
+            'errors' => $errors,
+            'success' => $success
+        ]);
     }
 }

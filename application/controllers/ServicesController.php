@@ -2,7 +2,7 @@
 
 class ServicesController extends Controller
 {
-    public function action_index()
+    public function action(string $viewName): void
     {
         $this->view->render('services', [
             'title' => 'Услуги',
