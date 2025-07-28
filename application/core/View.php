@@ -12,13 +12,19 @@ class View
         $this->twig = new Environment($loader);
     }
 
-    public function render(string $template, array $data = []): void
+    public function render(string $template, array $data = [], string|false $layout = 'template.twig'): void
     {
         // Рендерим внутренний шаблон и сохраняем HTML
         $inner = $this->twig->render($template . '.twig', $data);
 
-        // Выводим общий шаблон, передавая контент и заголовок страницы
-        $this->twig->display('template.twig', [
+        // Если указан шаблон-обёртка, выводим его,
+        // иначе отдаём только внутреннее содержимое
+        if ($layout === false) {
+            echo $inner;
+            return;
+        }
+
+        $this->twig->display($layout, [
             'content' => $inner,
             'title' => $data['title'] ?? null,
         ]);
