@@ -2,7 +2,7 @@
 
 class ContactsController extends Controller
 {
-    public function action_index()
+    public function action(string $viewName)
     {
         $errors = [];
         $success = null;
