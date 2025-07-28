@@ -5,24 +5,38 @@ class ContactsController extends Controller
     public function action_index()
     {
         $errors = [];
-        $success = false;
-        $form = ['name' => '', 'email' => '', 'message' => ''];
+        $success = null;
+        $name = '';
+        $email = '';
+        $message = '';
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $form['name'] = trim($_POST['name'] ?? '');
-            $form['email'] = trim($_POST['email'] ?? '');
-            $form['message'] = trim($_POST['message'] ?? '');
+            $name = trim($_POST['name'] ?? '');
+            $email = trim($_POST['email'] ?? '');
+            $message = trim($_POST['message'] ?? '');
 
-            if ($form['name'] === '') $errors[] = 'Имя обязательно';
-            if ($form['email'] === '') $errors[] = 'Email обязателен';
-            if ($form['message'] === '') $errors[] = 'Сообщение обязательно';
+            if ($name === '') {
+                $errors['name'] = 'Имя обязательно';
+            }
+            if ($email === '') {
+                $errors['email'] = 'Email обязателен';
+            }
+            if ($message === '') {
+                $errors['message'] = 'Сообщение обязательно';
+            }
 
             if (empty($errors)) {
-                $data = $form + ['timestamp' => date('c')];
-                if (!file_exists('data')) mkdir('data');
-                file_put_contents('data/contacts.json', json_encode($data, JSON_PRETTY_PRINT), FILE_APPEND);
-                $success = true;
-                $form = ['name' => '', 'email' => '', 'message' => ''];
+                if (!is_dir('data')) {
+                    mkdir('data');
+                }
+                file_put_contents('data/contacts.json', json_encode([
+                    'name' => $name,
+                    'email' => $email,
+                    'message' => $message,
+                    'timestamp' => date('c'),
+                ], JSON_PRETTY_PRINT), FILE_APPEND);
+                $success = 'Форма успешно отправлена!';
+                $name = $email = $message = '';
             }
         }
 
@@ -30,7 +44,11 @@ class ContactsController extends Controller
             'title' => 'Контактная форма',
             'errors' => $errors,
             'success' => $success,
-            'form' => $form
+            'old' => [
+                'name' => $name,
+                'email' => $email,
+                'message' => $message,
+            ],
         ]);
     }
 }
