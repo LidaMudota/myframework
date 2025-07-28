@@ -14,7 +14,13 @@ class View
 
     public function render(string $template, array $data = []): void
     {
-        $content = $this->twig->render($template . '.twig', $data);
-        echo $this->twig->render('template.twig', ['content' => $content] + $data);
+        // Рендерим внутренний шаблон и сохраняем HTML
+        $inner = $this->twig->render($template . '.twig', $data);
+
+        // Выводим общий шаблон, передавая контент и заголовок страницы
+        $this->twig->display('template.twig', [
+            'content' => $inner,
+            'title' => $data['title'] ?? null,
+        ]);
     }
 }
