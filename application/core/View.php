@@ -14,6 +14,10 @@ class View
 
     public function render(string $template, array $data = [], string|false $layout = 'template.twig'): void
     {
+        if ($layout !== false && !is_string($layout)) {
+            throw new \InvalidArgumentException('Layout must be false or string');
+        }
+
         // Рендерим внутренний шаблон и сохраняем HTML
         $inner = $this->twig->render($template . '.twig', $data);
 
@@ -24,9 +28,6 @@ class View
             return;
         }
 
-        $this->twig->display($layout, [
-            'content' => $inner,
-            'title' => $data['title'] ?? null,
-        ]);
+        $this->twig->display($layout, ['content' => $inner] + $data);
     }
 }
